@@ -5,6 +5,8 @@ import { z } from "zod";
 import { Button } from "@/components/ui/Button";
 import { trackEvent } from "@/lib/analytics";
 
+const LEAD_EMAIL = "nextelevenstudios@gmail.com";
+
 const schema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
@@ -12,13 +14,25 @@ const schema = z.object({
   message: z.string().max(2000).optional(),
 });
 
+function mailtoLeadHref(data: z.infer<typeof schema>) {
+  const subject = `Artist website inquiry — ${data.name}`;
+  const body = [
+    `Name: ${data.name}`,
+    `Email: ${data.email}`,
+    `Studio or city: ${data.studioOrCity}`,
+    "",
+    data.message ? `Message:\n${data.message}` : "",
+  ].join("\n");
+  const safeBody = body.length > 1800 ? `${body.slice(0, 1797)}...` : body;
+  return `mailto:${LEAD_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(safeBody)}`;
+}
+
 export function ArtistLeadCTA() {
-  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">("idle");
+  const [status, setStatus] = useState<"idle" | "ok">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("loading");
     setErrors({});
     const form = new FormData(e.currentTarget);
     const payload = {
@@ -34,22 +48,12 @@ export function ArtistLeadCTA() {
         f[issue.path[0] as string] = issue.message;
       }
       setErrors(f);
-      setStatus("idle");
       return;
     }
-    try {
-      const res = await fetch("/api/artist-lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
-      if (!res.ok) throw new Error("fail");
-      trackEvent("nexteleven_lead_submitted");
-      setStatus("ok");
-      e.currentTarget.reset();
-    } catch {
-      setStatus("err");
-    }
+    trackEvent("nexteleven_lead_submitted");
+    window.location.href = mailtoLeadHref(parsed.data);
+    setStatus("ok");
+    e.currentTarget.reset();
   }
 
   return (
@@ -81,11 +85,14 @@ export function ArtistLeadCTA() {
               className="form-control mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-3 text-white outline-none ring-0 focus:border-[var(--pink)] md:py-2"
             />
           </div>
-          <Button type="submit" disabled={status === "loading"} className="w-full min-[480px]:w-auto">
-            {status === "loading" ? "Sending…" : "Get my artist site"}
+          <Button type="submit" className="w-full min-[480px]:w-auto">
+            Get my artist site
           </Button>
-          {status === "ok" ? <p className="text-sm text-green-400">Thanks — Nexteleven will follow up.</p> : null}
-          {status === "err" ? <p className="text-sm text-red-400">Something went wrong. Try again.</p> : null}
+          {status === "ok" ? (
+            <p className="text-sm text-green-400">
+              Your email app should have opened with a draft to {LEAD_EMAIL}. If it did not, email us there directly.
+            </p>
+          ) : null}
         </form>
       </div>
     </section>
