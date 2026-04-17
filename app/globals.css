@@ -1,0 +1,283 @@
+@import "tailwindcss";
+
+:root {
+  --bg-deep: #050508;
+  --bg-panel: #0c0c12;
+  --pink: #ff2da6;
+  --pink-dim: #c21e7e;
+  --white: #f4f2f8;
+  --muted: #8a8698;
+  --border: rgba(255, 45, 166, 0.22);
+  --glow: rgba(255, 45, 166, 0.35);
+}
+
+@theme inline {
+  --color-background: var(--bg-deep);
+  --color-foreground: var(--white);
+  --color-muted: var(--muted);
+  --color-accent: var(--pink);
+  --color-accent-dim: var(--pink-dim);
+  --color-panel: var(--bg-panel);
+  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-syne);
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  background: radial-gradient(1200px 800px at 10% -10%, rgba(255, 45, 166, 0.12), transparent 55%),
+    radial-gradient(900px 600px at 90% 0%, rgba(120, 80, 255, 0.08), transparent 50%), var(--bg-deep);
+  color: var(--white);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Form controls: 16px+ on small screens prevents iOS zoom-on-focus */
+.form-control {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .form-control {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+
+::selection {
+  background: rgba(255, 45, 166, 0.35);
+  color: #fff;
+}
+
+.noise-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 50;
+}
+
+.glass-panel {
+  background: linear-gradient(145deg, rgba(18, 18, 26, 0.92), rgba(10, 10, 14, 0.88));
+  border: 1px solid var(--border);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03) inset, 0 20px 60px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(14px);
+}
+
+.neon-ring {
+  box-shadow: 0 0 0 1px var(--border), 0 0 28px var(--glow);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #fff 0%, #ffb8e8 45%, var(--pink) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Animated headline shimmer (cyber-luxe) */
+@keyframes gradient-flow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.text-gradient-animated {
+  background: linear-gradient(
+    110deg,
+    #ffffff 0%,
+    #ffd0ec 25%,
+    var(--pink) 45%,
+    #c8b5ff 65%,
+    #ffffff 90%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-flow 10s ease-in-out infinite;
+}
+
+/* Soft drifting mesh behind hero / key sections */
+@keyframes mesh-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate(4%, -3%) scale(1.08);
+    opacity: 0.55;
+  }
+}
+
+@keyframes mesh-drift-reverse {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1.05);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate(-5%, 4%) scale(1);
+    opacity: 0.45;
+  }
+}
+
+.hero-mesh-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.hero-mesh-blob--a {
+  top: -10%;
+  left: -15%;
+  width: 55%;
+  height: 55%;
+  background: radial-gradient(circle, rgba(255, 45, 166, 0.45) 0%, transparent 70%);
+  animation: mesh-drift 14s ease-in-out infinite;
+}
+
+.hero-mesh-blob--b {
+  bottom: -5%;
+  right: -20%;
+  width: 50%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(140, 100, 255, 0.35) 0%, transparent 68%);
+  animation: mesh-drift-reverse 18s ease-in-out infinite;
+}
+
+.hero-mesh-blob--c {
+  top: 40%;
+  left: 30%;
+  width: 40%;
+  height: 40%;
+  background: radial-gradient(circle, rgba(255, 45, 166, 0.2) 0%, transparent 70%);
+  animation: mesh-drift 22s ease-in-out infinite reverse;
+}
+
+/* Eyebrow label pulse */
+@keyframes label-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 12px rgba(255, 45, 166, 0.35);
+    opacity: 1;
+  }
+  50% {
+    text-shadow: 0 0 22px rgba(255, 45, 166, 0.55);
+    opacity: 0.92;
+  }
+}
+
+.hero-eyebrow-glow {
+  animation: label-glow 4s ease-in-out infinite;
+}
+
+/* Image tiles: ink sweep on hover */
+@keyframes ink-edge {
+  0% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0.85;
+  }
+}
+
+.card-ink-frame {
+  position: relative;
+  transition:
+    box-shadow 0.45s ease,
+    border-color 0.35s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card-ink-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 45, 166, 0.15);
+  pointer-events: none;
+  opacity: 0.4;
+  transition: opacity 0.35s ease;
+}
+
+.group:hover .card-ink-frame::after,
+.group:focus-visible .card-ink-frame::after {
+  opacity: 1;
+  animation: ink-edge 1.2s ease-in-out alternate infinite;
+}
+
+.group:hover .card-ink-frame,
+.group:focus-visible .card-ink-frame {
+  border-color: rgba(255, 45, 166, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(255, 45, 166, 0.2),
+    0 0 40px rgba(255, 45, 166, 0.18),
+    0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+/* Slightly stronger film grain when motion is OK */
+@media (prefers-reduced-motion: no-preference) {
+  .noise-overlay {
+    opacity: 0.055;
+    animation: grain-flicker 0.4s steps(2) infinite;
+  }
+}
+
+@keyframes grain-flicker {
+  0% {
+    opacity: 0.048;
+  }
+  100% {
+    opacity: 0.062;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-gradient-animated {
+    animation: none;
+    background-size: 100% auto;
+    background-position: 0% 50%;
+  }
+
+  .hero-mesh-blob--a,
+  .hero-mesh-blob--b,
+  .hero-mesh-blob--c {
+    animation: none;
+    opacity: 0.35;
+  }
+
+  .hero-eyebrow-glow {
+    animation: none;
+    text-shadow: none;
+  }
+
+  .noise-overlay {
+    animation: none;
+    opacity: 0.04;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
