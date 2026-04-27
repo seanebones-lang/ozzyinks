@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { bookingSchema } from "@/lib/validation/booking";
 import { saveBooking } from "@/lib/booking-repository";
+import { sendBookingSubmittedEmail } from "@/lib/notify-email";
 import type { BookingRecord } from "@/types/booking";
+import { bookingSchema } from "@/lib/validation/booking";
 
 function makeId() {
   return `bk_${crypto.randomUUID().replace(/-/g, "").slice(0, 16)}`;
@@ -47,10 +48,16 @@ export async function POST(req: Request) {
 
     await saveBooking(record);
 
-    // Optional: notify artist (Resend, etc.) — log for ops visibility
     console.info("[booking]", JSON.stringify({ id, email: record.email, concept: record.concept.slice(0, 80) }));
 
-    return NextResponse.json({ ok: true, bookingId: id, status: "submitted" satisfies BookingRecord["status"] });
+    const emailed = await sendBookingSubmittedEmail(record);
+
+    return NextResponse.json({
+      ok: true,
+      bookingId: id,
+      status: "submitted" satisfies BookingRecord["status"],
+      notifyEmailSent: emailed,
+    });
   } catch {
     return NextResponse.json(
       { ok: false, code: "SERVER_ERROR", message: "Could not submit booking" },

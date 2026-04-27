@@ -4,8 +4,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
 import { trackEvent } from "@/lib/analytics";
-
-const LEAD_EMAIL = "nextelevenstudios@gmail.com";
+import { OZZY_CONTACT_EMAIL } from "@/lib/constants";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -14,26 +13,16 @@ const schema = z.object({
   message: z.string().max(2000).optional(),
 });
 
-function mailtoLeadHref(data: z.infer<typeof schema>) {
-  const subject = `Artist website inquiry — ${data.name}`;
-  const body = [
-    `Name: ${data.name}`,
-    `Email: ${data.email}`,
-    `Studio or city: ${data.studioOrCity}`,
-    "",
-    data.message ? `Message:\n${data.message}` : "",
-  ].join("\n");
-  const safeBody = body.length > 1800 ? `${body.slice(0, 1797)}...` : body;
-  return `mailto:${LEAD_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(safeBody)}`;
-}
-
 export function ArtistLeadCTA() {
-  const [status, setStatus] = useState<"idle" | "ok">("idle");
+  const [status, setStatus] = useState<"idle" | "ok" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrors({});
+    setErrorMessage(null);
     const form = new FormData(e.currentTarget);
     const payload = {
       name: String(form.get("name") || ""),
@@ -50,10 +39,28 @@ export function ArtistLeadCTA() {
       setErrors(f);
       return;
     }
-    trackEvent("nexteleven_lead_submitted");
-    window.location.href = mailtoLeadHref(parsed.data);
-    setStatus("ok");
-    e.currentTarget.reset();
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/artist-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed.data),
+      });
+      const json = (await res.json()) as { ok?: boolean; message?: string };
+      if (!res.ok || !json.ok) {
+        setStatus("error");
+        setErrorMessage(json.message || "Could not send — try again or email directly.");
+        return;
+      }
+      trackEvent("nexteleven_lead_submitted");
+      setStatus("ok");
+      e.currentTarget.reset();
+    } catch {
+      setStatus("error");
+      setErrorMessage("Network error — try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -85,12 +92,21 @@ export function ArtistLeadCTA() {
               className="form-control mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-3 text-white outline-none ring-0 focus:border-[var(--pink)] md:py-2"
             />
           </div>
-          <Button type="submit" className="w-full min-[480px]:w-auto">
-            Get my artist site
+          <Button type="submit" className="w-full min-[480px]:w-auto" disabled={submitting}>
+            {submitting ? "Sending…" : "Get my artist site"}
           </Button>
           {status === "ok" ? (
             <p className="text-sm text-green-400">
-              Your email app should have opened with a draft to {LEAD_EMAIL}. If it did not, email us there directly.
+              Sent — Ozzy will receive your message at {OZZY_CONTACT_EMAIL}.
+            </p>
+          ) : null}
+          {status === "error" && errorMessage ? (
+            <p className="text-sm text-red-400">
+              {errorMessage}{" "}
+              <a className="underline-offset-4 hover:underline" href={`mailto:${OZZY_CONTACT_EMAIL}`}>
+                Email {OZZY_CONTACT_EMAIL} directly
+              </a>
+              .
             </p>
           ) : null}
         </form>

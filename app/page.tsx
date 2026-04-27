@@ -4,7 +4,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { SocialWall } from "@/components/social/SocialWall";
 import { NextelevenCaseStudyStrip } from "@/components/showcase/NextelevenCaseStudyStrip";
 import { ArtistLeadCTA } from "@/components/showcase/ArtistLeadCTA";
-import { PORTFOLIO_ITEMS } from "@/lib/portfolio-data";
+import { getPortfolioItems } from "@/lib/content/portfolio";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -13,8 +13,11 @@ const btnOutline =
 const btnPrimary =
   "inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--pink)] px-8 py-3.5 text-base font-medium text-black shadow-[0_0_40px_rgba(255,45,166,0.25)] transition hover:brightness-110 active:scale-[0.99] sm:w-auto";
 
-export default function HomePage() {
-  const teaser = PORTFOLIO_ITEMS.slice(0, 3);
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const portfolio = await getPortfolioItems();
+  const teaser = portfolio.slice(0, 3);
   return (
     <>
       <HeroReel />

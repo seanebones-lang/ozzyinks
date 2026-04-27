@@ -2,19 +2,19 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { PORTFOLIO_ITEMS, type PortfolioItem } from "@/lib/portfolio-data";
+import type { PortfolioItem } from "@/lib/portfolio-data";
 import { cn } from "@/lib/utils";
 
-const styles = Array.from(new Set(PORTFOLIO_ITEMS.map((i) => i.style)));
-
-export function PortfolioGrid() {
+export function PortfolioGrid({ items: allItems }: { items: PortfolioItem[] }) {
   const [filter, setFilter] = useState<string>("All");
   const [lightbox, setLightbox] = useState<PortfolioItem | null>(null);
 
+  const styles = useMemo(() => Array.from(new Set(allItems.map((i) => i.style))), [allItems]);
+
   const items = useMemo(() => {
-    if (filter === "All") return PORTFOLIO_ITEMS;
-    return PORTFOLIO_ITEMS.filter((i) => i.style === filter);
-  }, [filter]);
+    if (filter === "All") return allItems;
+    return allItems.filter((i) => i.style === filter);
+  }, [filter, allItems]);
 
   return (
     <div className="min-w-0 space-y-6 sm:space-y-8">

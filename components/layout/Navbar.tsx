@@ -11,6 +11,9 @@ import { trackEvent } from "@/lib/analytics";
 const links = [
   { href: "/", label: "Home" },
   { href: "/portfolio", label: "Portfolio" },
+  { href: "/artwork", label: "Art" },
+  { href: "/journal", label: "Journal" },
+  { href: "/schedule", label: "Travel" },
   { href: "/book", label: "Book" },
   { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },

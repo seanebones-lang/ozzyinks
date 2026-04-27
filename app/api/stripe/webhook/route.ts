@@ -1,8 +1,9 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { updateBookingStatus } from "@/lib/booking-repository";
+import { getBooking, updateBookingStatus } from "@/lib/booking-repository";
 import { getStripe } from "@/lib/stripe";
+import { sendDepositPaidEmail } from "@/lib/notify-email";
 
 export async function POST(req: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -36,6 +37,10 @@ export async function POST(req: Request) {
     if (bookingId && session.payment_status === "paid") {
       await updateBookingStatus(bookingId, "deposit_paid");
       console.info("[stripe webhook] deposit_paid", bookingId);
+      const booking = await getBooking(bookingId);
+      if (booking) {
+        await sendDepositPaidEmail(booking);
+      }
     }
   }
 

@@ -37,6 +37,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Sanity CLI / hosted deploy build output (regenerate with npm run studio:deploy)
+.sanity/
+dist/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

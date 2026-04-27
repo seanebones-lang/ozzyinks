@@ -26,6 +26,10 @@ const faqs = [
     q: "What is Fox Concierge?",
     a: "It’s the site’s AI assistant for FAQs and booking guidance. It doesn’t replace Ozzy for final creative decisions.",
   },
+  {
+    q: "How do I reach Ozzy directly?",
+    a: "Email Ozzyfox444@gmail.com or use the Book page so your project details go straight to the studio inbox.",
+  },
 ];
 
 export default function FAQPage() {

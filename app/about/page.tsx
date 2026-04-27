@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OZZY_CONTACT_EMAIL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "About",
@@ -23,6 +24,12 @@ export default function AboutPage() {
         </p>
         <p className="text-muted">
           Replace this copy with Ozzy’s real bio, awards, guest spots, and studio location when you’re ready.
+        </p>
+        <p>
+          Bookings and questions:{" "}
+          <a className="text-[var(--pink)] underline-offset-4 hover:underline" href={`mailto:${OZZY_CONTACT_EMAIL}`}>
+            {OZZY_CONTACT_EMAIL}
+          </a>
         </p>
       </div>
     </div>

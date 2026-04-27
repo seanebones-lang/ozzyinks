@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OZZY_CONTACT_EMAIL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Policies",
@@ -40,7 +41,11 @@ export default function PoliciesPage() {
           <h2 className="break-words font-[family-name:var(--font-syne)] text-xl font-semibold text-white">Privacy</h2>
           <p className="mt-2 text-muted">
             Booking form data is used to evaluate your project and contact you about scheduling. Do not submit medical
-            information. For questions about data handling, contact the studio directly.
+            information. For questions about data handling, contact{" "}
+            <a className="text-[var(--pink)] underline-offset-4 hover:underline" href={`mailto:${OZZY_CONTACT_EMAIL}`}>
+              {OZZY_CONTACT_EMAIL}
+            </a>
+            .
           </p>
         </section>
         <section className="min-w-0">

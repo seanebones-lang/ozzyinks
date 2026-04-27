@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
+import { getPortfolioItems } from "@/lib/content/portfolio";
 
 export const metadata: Metadata = {
   title: "Portfolio",
   description: "Browse Ozzy Fox tattoo portfolio — styles, placements, healed and fresh work.",
 };
 
-export default function PortfolioPage() {
+export const revalidate = 60;
+
+export default async function PortfolioPage() {
+  const items = await getPortfolioItems();
   return (
     <div className="mx-auto min-w-0 max-w-6xl px-3 py-12 sm:px-4 sm:py-16">
       <header className="mb-8 max-w-2xl min-w-0 sm:mb-10">
@@ -18,7 +22,7 @@ export default function PortfolioPage() {
           Filter by style, open a piece for a closer look, and bring references when you book.
         </p>
       </header>
-      <PortfolioGrid />
+      <PortfolioGrid items={items} />
     </div>
   );
 }

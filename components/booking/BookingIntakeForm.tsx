@@ -7,6 +7,7 @@ import { bookingSchema, type BookingInput } from "@/lib/validation/booking";
 import { Button } from "@/components/ui/Button";
 import { DepositCheckoutCard } from "@/components/booking/DepositCheckoutCard";
 import { trackEvent } from "@/lib/analytics";
+import { OZZY_CONTACT_EMAIL } from "@/lib/constants";
 
 const steps = ["Project", "Contact", "Policies & send"] as const;
 
@@ -14,6 +15,7 @@ export function BookingIntakeForm() {
   const [step, setStep] = useState(0);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [emailDeliveryWarn, setEmailDeliveryWarn] = useState(false);
 
   const form = useForm<BookingInput>({
     resolver: zodResolver(bookingSchema),
@@ -52,6 +54,7 @@ export function BookingIntakeForm() {
 
   async function onValid(data: BookingInput) {
     setServerError(null);
+    setEmailDeliveryWarn(false);
     trackEvent("booking_form_submitted");
     try {
       const { website, ...rest } = data;
@@ -72,6 +75,9 @@ export function BookingIntakeForm() {
         return;
       }
       setBookingId(json.bookingId as string);
+      if (json.notifyEmailSent === false) {
+        setEmailDeliveryWarn(true);
+      }
     } catch {
       setServerError("Network error — try again.");
     }
@@ -226,6 +232,15 @@ export function BookingIntakeForm() {
             Request received. Ozzy will review your submission and contact you with next steps. Booking reference:{" "}
             <span className="break-all font-mono text-white">{bookingId}</span>
           </div>
+          {emailDeliveryWarn ? (
+            <p className="rounded-2xl border border-amber-500/35 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+              Your request was saved, but the notification email could not be sent from the site. Please email{" "}
+              <a className="font-medium text-white underline-offset-4 hover:underline" href={`mailto:${OZZY_CONTACT_EMAIL}`}>
+                {OZZY_CONTACT_EMAIL}
+              </a>{" "}
+              with your booking reference so nothing is missed.
+            </p>
+          ) : null}
           <DepositCheckoutCard bookingId={bookingId} email={getValues("email")} />
         </div>
       ) : null}

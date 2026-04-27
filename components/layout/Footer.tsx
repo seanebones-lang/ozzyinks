@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SOCIAL } from "@/lib/constants";
+import { OZZY_CONTACT_EMAIL, SOCIAL } from "@/lib/constants";
 import { NextelevenSignature } from "@/components/branding/NextelevenSignature";
 
 export function Footer() {
@@ -12,6 +12,12 @@ export function Footer() {
           </p>
           <p className="max-w-sm text-sm text-muted">Cyber-luxe tattoo art. Bookings, deposits, and custom work.</p>
           <div className="flex flex-col gap-1 text-sm min-[480px]:flex-row min-[480px]:flex-wrap min-[480px]:gap-x-6 min-[480px]:gap-y-2">
+            <a
+              href={`mailto:${OZZY_CONTACT_EMAIL}`}
+              className="min-h-11 py-2 text-muted transition hover:text-accent min-[480px]:min-h-0 min-[480px]:py-0"
+            >
+              {OZZY_CONTACT_EMAIL}
+            </a>
             <a
               href={SOCIAL.instagram}
               target="_blank"
