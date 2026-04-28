@@ -31,7 +31,11 @@ export default async function BookPage({ searchParams }: Props) {
         before you submit.
       </p>
       {openings?.length ? (
-        <section className="mt-8 rounded-2xl border border-[var(--pink)]/35 bg-[var(--pink)]/10 p-5 sm:p-6" aria-label="Immediate openings">
+        <section
+          id="immediate-openings"
+          className="mt-8 scroll-mt-28 rounded-2xl border border-[var(--pink)]/35 bg-[var(--pink)]/10 p-5 sm:p-6"
+          aria-label="Immediate openings"
+        >
           <h2 className="font-[family-name:var(--font-syne)] text-lg font-semibold text-white">Immediate openings</h2>
           <ul className="mt-4 space-y-4">
             {openings.map((o) => (

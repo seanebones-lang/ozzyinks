@@ -38,9 +38,9 @@ Work through this when you are ready to connect Sanity, email, and production.
 13. Set **`NEXT_PUBLIC_SITE_URL`** to your real URL (metadata / Open Graph).
 14. After deploy, smoke-test **`/studio`**, **`/portfolio`**, **`/journal`**, **`/schedule`**, **`/artwork`**, **`/book`**, and the footer email link.
 
-## Optional
+Preview deployments need **per-branch** env in this Vercel team (UI: Project → Settings → Environment Variables), or run `vercel env add … preview <branch>`. Copy **Production** vars as needed.
 
-15. Update any internal docs that still mention `BOOKING_RECIPIENT_EMAIL`; notifications use Resend and **`CONTACT_NOTIFY_EMAIL`** (optional) plus **`OZZY_CONTACT_EMAIL`** in `lib/constants.ts`.
+See **[docs/WEBHOOKS.md](./docs/WEBHOOKS.md)** for Sanity CORS, cache revalidation, and Stripe/Resend notes.
 
 ## Reference: `.env.example`
 

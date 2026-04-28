@@ -39,7 +39,7 @@ export default async function SchedulePage() {
         </p>
       </header>
 
-      <section className="mb-16">
+      <section id="guest-spots" className="mb-16 scroll-mt-28">
         <h2 className="font-[family-name:var(--font-syne)] text-2xl font-bold text-white">Guest spots</h2>
         {spotsEmpty ? (
           <p className="mt-4 rounded-2xl border border-white/10 bg-panel p-6 text-sm text-muted">
@@ -83,7 +83,7 @@ export default async function SchedulePage() {
         )}
       </section>
 
-      <section>
+      <section id="special-events" className="scroll-mt-28">
         <h2 className="font-[family-name:var(--font-syne)] text-2xl font-bold text-white">Special events</h2>
         {eventsEmpty ? (
           <p className="mt-4 rounded-2xl border border-white/10 bg-panel p-6 text-sm text-muted">
