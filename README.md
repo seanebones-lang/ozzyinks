@@ -15,7 +15,7 @@ npm run lint   # ESLint
 
 Copy [`.env.example`](./.env.example) to `.env.local` and fill values for your deployment.
 
-- **xAI:** `XAI_API_KEY`, optional `XAI_MODEL` (default `grok-2-latest`)
+- **xAI:** `XAI_API_KEY`, optional `XAI_MODEL` (default `grok-4`)
 - **Stripe:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (publishable key for future client-side Stripe.js if needed)
 - **Site URL:** `NEXT_PUBLIC_SITE_URL` (canonical, used in Stripe success/cancel URLs)
 - **Optional persistence:** `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` so booking records survive across serverless invocations and deposit webhooks can resolve `bookingId`

@@ -18,7 +18,7 @@ Studio deposit policy for reference: $100 non-refundable deposit applies to appr
 
 export async function createChatCompletion(messages: ChatMessage[]) {
   const key = process.env.XAI_API_KEY;
-  const model = process.env.XAI_MODEL || "grok-2-latest";
+  const model = process.env.XAI_MODEL || "grok-4";
   if (!key) {
     throw new Error("XAI_API_KEY is not configured");
   }

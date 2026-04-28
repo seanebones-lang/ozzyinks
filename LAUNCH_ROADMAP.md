@@ -86,7 +86,7 @@ Alternatives: **Netlify** or **Cloudflare Workers** can host Next.js with adapte
 ## Phase 4 — xAI (Fox Concierge)
 
 1. Obtain **xAI API key**; set `XAI_API_KEY` in Vercel (server-only, never `NEXT_PUBLIC_`).
-2. Optional: `XAI_MODEL` (default in `.env.example` is `grok-2-latest`—confirm current model names in xAI docs).
+2. Optional: `XAI_MODEL` (default in code is `grok-4`; alternatives like `grok-4.20` per xAI docs).
 3. Smoke-test `/` chat: text replies; voice depends on browser **Web Speech API** (no extra backend for recognition—only Grok calls hit your API).
 
 **Done when:** Concierge answers without 500s; tune copy/system prompt in code if needed.
